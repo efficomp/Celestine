@@ -44,7 +44,7 @@ where:
 * labels_test.npy is the file with the test dataset labels (in .npy format).
 * MRMR.csv is the file with mRMR features ranking (in .csv format).
 
-Finally, once the scritp is finished, the accuracy will be saved in a local database using the PyMongo library.
+Finally, once the script is finished, the accuracy will be saved in a local database using the PyMongo library.
 
 ## Acknowledgments
 
