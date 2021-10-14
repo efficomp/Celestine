@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html4" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>classifiers &mdash; source</title>
+  
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+
+  
+  
+    <link rel="shortcut icon" href="../_static/efficomp_logo1.ico"/>
+  
+
+  
+  
+
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../_static/jquery.js"></script>
+        <script type="text/javascript" src="../_static/underscore.js"></script>
+        <script type="text/javascript" src="../_static/doctools.js"></script>
+        <script type="text/javascript" src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> Celestine
+          
+
+          
+            
+            <img src="../_static/efficomp_logo1.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../classifiers.html">Classifiers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cnn.html">CNN</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Celestine</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>classifiers</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for classifiers</h1><div class="highlight"><pre>
+<span></span><span class="c1"># This file is part of source.</span>
+<span class="c1">#</span>
+<span class="c1"># Celestine is free software: you can redistribute it and/or modify it under the</span>
+<span class="c1"># terms of the GNU General Public License as published by the Free Software</span>
+<span class="c1"># Foundation, either version 3 of the License, or (at your option) any later</span>
+<span class="c1"># version.</span>
+<span class="c1">#</span>
+<span class="c1"># source is distributed in the hope that it will be useful, but WITHOUT ANY</span>
+<span class="c1"># WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR</span>
+<span class="c1"># A PARTICULAR PURPOSE. See the GNU General Public License for more details.</span>
+<span class="c1">#</span>
+<span class="c1"># You should have received a copy of the GNU General Public License along with</span>
+<span class="c1"># source. If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
+<span class="c1">#</span>
+<span class="c1"># This work was supported by project PGC2018-098813-B-C31 (Spanish &quot;Ministerio</span>
+<span class="c1"># de Ciencia, Innovación y Universidades&quot;), and by the European Regional</span>
+<span class="c1"># Development Fund (ERDF).</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This script provides the four classifiers K-NN, SVM, Random Forest, and Naive Bayes to solve a classification problem.</span>
+
+<span class="sd">The script receives the training and test datasets (labels and data) as well as the mRMR ranking to perform the</span>
+<span class="sd">classification. The optimisation of the parameters in the different models is carried out through a grid search,</span>
+<span class="sd">using :py:class:`sklearn.model_selection.GridSearchCV`. Different subsets of features of the mRMR ranking are</span>
+<span class="sd">selected in order to determine which subset is the best.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># Python libraries</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pymongo</span> <span class="k">import</span> <span class="n">MongoClient</span>
+
+<span class="c1"># Sklearn</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">svm</span>
+<span class="kn">from</span> <span class="nn">sklearn.neighbors</span> <span class="k">import</span> <span class="n">KNeighborsClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="k">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span>
+
+<span class="n">__author__</span> <span class="o">=</span> <span class="s1">&#39;Juan Carlos Gómez-López&#39;</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2021, EFFICOMP&#39;</span>
+<span class="n">__license__</span> <span class="o">=</span> <span class="s1">&#39;GNU GPL-3.0-or-later&#39;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;0.1.0&#39;</span>
+<span class="n">__maintainer__</span> <span class="o">=</span> <span class="s1">&#39;Juan Carlos Gómez-López&#39;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s1">&#39;goloj@ugr.es&#39;</span>
+<span class="n">__status__</span> <span class="o">=</span> <span class="s1">&#39;Development&#39;</span>
+
+
+<div class="viewcode-block" id="fit_model"><a class="viewcode-back" href="../classifiers.html#classifiers.fit_model">[docs]</a><span class="k">def</span> <span class="nf">fit_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data_train</span><span class="p">,</span> <span class="n">data_test</span><span class="p">,</span> <span class="n">labels_train</span><span class="p">,</span> <span class="n">labels_test</span><span class="p">,</span> <span class="n">features_mrmr</span><span class="p">,</span> <span class="n">max_features</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Fit the model.</span>
+
+<span class="sd">    :param model: Classifier model created by the GridSearchCV function</span>
+<span class="sd">    :type model: :py:class:`sklearn.model_selection.GridSearchCV`</span>
+
+<span class="sd">    :param data_train: Training dataset data</span>
+<span class="sd">    :type data_train: :py:class:`numpy.ndarray`</span>
+
+<span class="sd">    :param data_test: Test dataset data</span>
+<span class="sd">    :type data_test: :py:class:`numpy.ndarray`</span>
+
+<span class="sd">    :param labels_train: Training dataset labels</span>
+<span class="sd">    :type labels_train: :py:class:`numpy.ndarray`</span>
+
+<span class="sd">    :param labels_test: Test dataset labels</span>
+<span class="sd">    :type labels_test: :py:class:`numpy.ndarray`</span>
+
+<span class="sd">    :param features_mrmr: mRMR ranking</span>
+<span class="sd">    :type features_mrmr: :py:class:`list`</span>
+
+<span class="sd">    :param max_features: First selected features of the mRMR ranking</span>
+<span class="sd">    :type max_features: :py:class:`int`</span>
+
+<span class="sd">    :return Accuracy</span>
+<span class="sd">    :rtype: :py:class:`float`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data_train</span><span class="p">[:,</span> <span class="n">features_mrmr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">max_features</span><span class="p">]],</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">labels_train</span><span class="p">))</span>
+    <span class="n">prediction</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">data_test</span><span class="p">[:,</span> <span class="n">features_mrmr</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">max_features</span><span class="p">]])</span>
+    <span class="k">return</span> <span class="n">metrics</span><span class="o">.</span><span class="n">accuracy_score</span><span class="p">(</span><span class="n">labels_test</span><span class="p">,</span> <span class="n">prediction</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1"># Prepare database for saving results</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">()</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">Classifiers</span>
+    <span class="n">db</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">drop</span><span class="p">()</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">results</span>
+
+    <span class="n">cnn_parameters</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;train_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;train_labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;test_data&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;test_labels&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;mrmr_features&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+    <span class="c1"># Read the MRMR file</span>
+    <span class="n">mrmr_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;mrmr_features&#39;</span><span class="p">],</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mrmr_features</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3600</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="c1"># Read the datasets</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;train_data&#39;</span><span class="p">]),</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;test_data&#39;</span><span class="p">])</span>
+    <span class="p">}</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;train_labels&#39;</span><span class="p">]),</span> <span class="s1">&#39;test&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cnn_parameters</span><span class="p">[</span><span class="s1">&#39;test_labels&#39;</span><span class="p">])</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Parameters for the grid search and all the necessary data</span>
+    <span class="n">parameters_svm</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+                      <span class="s1">&#39;gamma&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.025</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.07</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span>
+                                <span class="mf">0.9</span><span class="p">]}</span>
+
+    <span class="n">parameters_knn</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_neighbors&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">29</span><span class="p">]}</span>
+
+    <span class="n">parameters_rf</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">,</span> <span class="mi">256</span><span class="p">]}</span>
+
+    <span class="n">features_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">85</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+
+    <span class="n">knn_accuray</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;knn&#39;</span><span class="p">}</span>
+    <span class="n">svm_accuray</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;svm&#39;</span><span class="p">}</span>
+    <span class="n">rf_accuray</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;rf&#39;</span><span class="p">}</span>
+    <span class="n">nb_accuray</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;algorithm&#39;</span><span class="p">:</span> <span class="s1">&#39;nb&#39;</span><span class="p">}</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">features_range</span><span class="p">:</span>
+        <span class="n">knn_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">svm_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">rf_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">nb_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># KNN</span>
+    <span class="n">knn</span> <span class="o">=</span> <span class="n">KNeighborsClassifier</span><span class="p">()</span>
+    <span class="n">gs_knn</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">knn</span><span class="p">,</span> <span class="n">parameters_knn</span><span class="p">)</span>
+
+    <span class="c1"># SVM</span>
+    <span class="n">svm</span> <span class="o">=</span> <span class="n">svm</span><span class="o">.</span><span class="n">SVC</span><span class="p">()</span>
+    <span class="n">gs_svm</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">svm</span><span class="p">,</span> <span class="n">parameters_svm</span><span class="p">)</span>
+
+    <span class="c1"># Random Forest</span>
+    <span class="n">rf</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+    <span class="n">gs_rf</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">rf</span><span class="p">,</span> <span class="n">parameters_rf</span><span class="p">)</span>
+
+    <span class="c1"># Naive Bayes</span>
+    <span class="n">nb</span> <span class="o">=</span> <span class="n">GaussianNB</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">features_range</span><span class="p">:</span>
+        <span class="n">knn_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">gs_knn</span><span class="p">,</span> <span class="n">data_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">data_test</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                             <span class="n">labels_train</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">labels_test</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                             <span class="n">features_mrmr</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+
+        <span class="n">svm_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">gs_svm</span><span class="p">,</span> <span class="n">data_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">data_test</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                             <span class="n">labels_train</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">labels_test</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                             <span class="n">features_mrmr</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+
+        <span class="n">rf_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">gs_rf</span><span class="p">,</span> <span class="n">data_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">data_test</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                            <span class="n">labels_train</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">labels_test</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                            <span class="n">features_mrmr</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+
+        <span class="n">nb_accuray</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">f</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_model</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="n">nb</span><span class="p">,</span> <span class="n">data_train</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">data_test</span><span class="o">=</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                            <span class="n">labels_train</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">labels_test</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="s1">&#39;test&#39;</span><span class="p">],</span>
+                                            <span class="n">features_mrmr</span><span class="o">=</span><span class="n">features</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">knn_accuray</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">svm_accuray</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">rf_accuray</span><span class="p">)</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">insert_one</span><span class="p">(</span><span class="n">nb_accuray</span><span class="p">)</span>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &#169; Copyright 2021, &lt;a href=&#34;https://atcproyectos.ugr.es/efficomp/&#34;&gt;EFFICOMP&lt;/a&gt;.
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
