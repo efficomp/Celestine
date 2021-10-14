@@ -4,8 +4,8 @@ Celestine is a machine learning Python-based procedure to supervised classificat
 supervised classifiers have been developed: K-NN, SVM, Naive Bayes, Random Forest, and a Convolutional 
 Neural Network (CNN).
 
-This software gives great versatility since its use is not restricted to a specific type of signals, 
-but any type classification problem can be solved as long as the datasets have the proper format.
+This software gives great versatility since its use is not restricted to a specific type of datasets, 
+but any type classification problem can be solved as long as they have the proper format.
 
 ## Requirements
 
