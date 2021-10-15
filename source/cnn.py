@@ -17,7 +17,7 @@
 # Development Fund (ERDF).
 
 """
-This script provides the CNN to solve a classification problem.
+This script provides a CNN to solve a classification problem.
 
 The script receives the training and test datasets (labels and data) as well as the mRMR ranking to perform the
 classification. The optimisation of the parameters in the different models is carried out through a grid search,
