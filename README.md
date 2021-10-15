@@ -1,11 +1,12 @@
 # Celestine
 
-Celestine is a machine learning Python-based procedure to supervised classification. A total of five 
-supervised classifiers have been developed: K-NN, SVM, Naive Bayes, Random Forest, and a Convolutional 
-Neural Network (CNN).
+Celestine is a Python-based procedure to solve classification problems through five Machine Learning methods:
 
-This software gives great versatility since its use is not restricted to a specific type of datasets, 
-but any type classification problem can be solved as long as they have the proper format.
+* K-NN
+* SVM
+* Naive Bayes
+* Random Forest
+* Convolutional Neural Network (CNN)
 
 ## Requirements
 
