@@ -30,7 +30,7 @@ its docs from the source code. Simply change directory to the `doc` subfolder an
 ## Usage
 
 There are two files to perform the classification:
-* `cnn.py` - Script to run the CNN only.
+* `cnn.py` - Script to run only the CNN.
 * `classfiers.py` - Script to run the rest of classifiers.
 
 The command to execute each script is as follows:
