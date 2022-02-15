@@ -33,7 +33,7 @@ sys.setrecursionlimit(1500)
 # -- Project information -----------------------------------------------------
 
 project = 'Celestine'
-copyright = ('2021, <a href="https://atcproyectos.ugr.es/efficomp/">EFFICOMP</a>')
+copyright = '2021, EFFICOMP'
 author = 'Juan Carlos Gómez-López'
 
 # The short X.Y version

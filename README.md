@@ -22,22 +22,24 @@ Celestine requires Python 3. It also depends on the following Python packages:
 
 ## Documentation
 
-Celestine is fully documented in its [github-pages](https://efficomp.github.io/Celestine/). You can also generate
-its docs from the source code. Simply change directory to the `doc` subfolder and type in 
-`make html`, the documentation will be under `build/html`. You will need 
+Celestine is fully documented in its [github-pages](https://efficomp.github.io/Celestine/). You can also generate its
+docs from the source code. Simply change directory to the `doc` subfolder and type in
+`make html`, the documentation will be under `build/html`. You will need
 [Sphinx](https://www.sphinx-doc.org/en/master/) to build the documentation.
 
 ## Usage
 
 There are two files to perform the classification:
+
 * `cnn.py` - Script to run only the CNN.
 * `classfiers.py` - Script to run the rest of classifiers.
 
 The command to execute each script is as follows:
 
-`$ python3 script data_train.npy labels_train.npy data_test.npy labels_test.npy MRMR.csv` 
+`$ python3 script data_train.npy labels_train.npy data_test.npy labels_test.npy MRMR.csv`
 
 where:
+
 * script is `cnn.py` or `classifiers.py`.
 * data_train.npy is the file with the training dataset data (in .npy format).
 * labels_train.npy is the file with the training dataset labels (in .npy format).
@@ -45,22 +47,29 @@ where:
 * labels_test.npy is the file with the test dataset labels (in .npy format).
 * MRMR.csv is the file with mRMR features ranking (in .csv format).
 
-Finally, once the script is finished, the accuracy of each method will be saved in a local database using the PyMongo library.
+Finally, once the script is finished, the accuracy of each method will be saved in a local database using the PyMongo
+library.
+
+## Publications
+
+* J. C. Gómez-López, J. J. Escobar, J. González, F. Gil-Montoya, J. Ortega, M. Burmester, M. Damas. *Energy-Time
+  Profiling for Machine Learning Methods to EEG Classification*. In: **International Conference on Bioengineering and
+  Biomedical Signal and Image Processing. BIOMESIP 2021**, pp. 311-322. https://doi.org/10.1007/978-3-030-88163-4_27
 
 ## Acknowledgments
 
-This work has been funded by:
+This work was supported by project *New Computing Paradigms and Heterogeneous Parallel Architectures for High-Performance
+and Energy Efficiency of Classification and Optimization Tasks on Biomedical Engineering Applications* 
+([HPEE-COBE](https://efficomp.ugr.es/research/projects/hpee-cobe/)), with reference PGC2018-098813-B-C31,
+funded by the Spanish *[Ministerio de Ciencia, Innovación y Universidades](https://www.ciencia.gob.es/)*, and by
+the [European Regional Development Fund (ERDF)](https://ec.europa.eu/regional_policy/en/funding/erdf/)**.**
 
-* Spanish [*Ministerio de Ciencia, Innovación y Universidades*](https://www.ciencia.gob.es/) under grant number PGC2018-098813-B-C31.
-* [*European Regional Development Fund (ERDF)*](https://ec.europa.eu/regional_policy/en/funding/erdf/).
-
-<div style="text-align: right">
-  <img src="https://raw.githubusercontent.com/efficomp/Hpmoon/main/docs/logos/mineco.png" height="70">
+<div style="text-align: center">
   <a href="https://www.ciencia.gob.es/">
-    <img src="https://raw.githubusercontent.com/efficomp/Hpmoon/main/docs/logos/miciu.jpg" height="70">
-  </a>
+    <img height="75" src="https://raw.githubusercontent.com/efficomp/ristretto/main/docs/resources/mineco.png" alt="Ministerio de Economía y Competitividad">
+  </a> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
   <a href="https://ec.europa.eu/regional_policy/en/funding/erdf/">
-    <img src="https://raw.githubusercontent.com/efficomp/Hpmoon/main/docs/logos/erdf.png" height="70">
+    <img height="75" src="https://raw.githubusercontent.com/efficomp/ristretto/main/docs/resources/erdf.png" alt="European Regional Development Fund (ERDF)">
   </a>
 </div>
 
@@ -70,10 +79,5 @@ This work has been funded by:
 
 ## Copyright
 
-Celestine © 2015 [EFFICOMP](https://atcproyectos.ugr.es/efficomp/).
+Celestine © 2015 [EFFICOMP](https://efficomp.ugr.es).
 
-## Publications
-
-1. J. C. Gómez-López, J. J. Escobar, J. González, F. Gil-Montoya, J. Ortega, M. Burmester, and M. Damas.
-"Energy-Time Profiling for Machine Learning Methods to EEG Classification". In: *International Conference on 
-Bioengineering and Biomedical Signal and Image Processing* (2021), pp. 311-322. doi: 10.1007/978-3-030-88163-4_27
